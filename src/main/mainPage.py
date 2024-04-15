@@ -6,7 +6,12 @@ from datetime import datetime
 import shutil
 import os
 import string
+from pymongo import MongoClient
 
+
+client = MongoClient("mongodb://localhost:27017/")
+db = client["Bonevision"]
+collection = db["user_info"]
 
 class Ui_mainPage(object):
     def setupUi(self, mainPage):

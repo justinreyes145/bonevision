@@ -30,6 +30,8 @@ class Ui_MainWindow(object):
         self.ui.setupUi1(self.window)
         self.window.show()
 
+
+
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")

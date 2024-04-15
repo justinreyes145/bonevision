@@ -1,18 +1,17 @@
-# -*- coding: utf-8 -*-
+from PySide6.QtCore import *
+from PySide6.QtGui import *
+from PySide6.QtWidgets import *
+from PySide6.QtWidgets import QFileDialog
+from datetime import datetime
+import shutil
+import os
+import string
+from pymongo import MongoClient
 
-################################################################################
-## Form generated from reading UI file 'mainPagetTIAZS.ui'
-##
-## Created by: Qt User Interface Compiler version 5.15.12
-##
-## WARNING! All changes made in this file will be lost when recompiling UI file!
-################################################################################
 
-from PySide6.QtCore import *  # type: ignore
-from PySide6.QtGui import *  # type: ignore
-from PySide6.QtWidgets import *  # type: ignore
-
-#import mainDialogBox_rc
+client = MongoClient("mongodb://localhost:27017/")
+db = client["Bonevision"]
+collection = db["user_info"]
 
 class Ui_mainPage(object):
     def saveStringInfo(self):
@@ -39,16 +38,20 @@ class Ui_mainPage(object):
         self.imagePane = QLabel(self.centralwidget)
         self.imagePane.setObjectName(u"imagePane")
         self.imagePane.setGeometry(QRect(650, 10, 381, 475))
-        self.imagePane.setPixmap(QPixmap("IMG0000019-1.jpg"))
+        self.imagePane.setPixmap(QPixmap("Resources/IMG0000019-1.jpg"))
         self.printButton = QPushButton(self.centralwidget)
         self.printButton.setObjectName(u"printButton")
         self.printButton.setGeometry(QRect(900, 510, 121, 27))
         self.uploadButton = QPushButton(self.centralwidget)
         self.uploadButton.setObjectName(u"uploadButton")
+        self.uploadButton.clicked.connect(self.upload_clicked)
         self.uploadButton.setGeometry(QRect(775, 510, 121, 27))
         self.showFullImageButton = QPushButton(self.centralwidget)
         self.showFullImageButton.setObjectName(u"showFullImageButton")
         self.showFullImageButton.setGeometry(QRect(650, 510, 121, 27))
+        self.saveButton = QPushButton(self.centralwidget)
+        self.saveButton.setObjectName(u"saveButton")
+        self.saveButton.setGeometry(QRect(525, 510, 121, 27))  # Adjusted position
         self.nameField = QTextEdit(self.centralwidget)
         self.nameField.setObjectName(u"nameField")
         self.nameField.setGeometry(QRect(10, 50, 291, 31))
@@ -100,7 +103,6 @@ class Ui_mainPage(object):
         self.saveInfo = QPushButton(self.centralwidget)
         self.saveInfo.setObjectName(u"saveInfo")
         self.saveInfo.setGeometry(QRect(60, 510, 200, 27))
-        self.saveInfo.clicked.connect(self.saveStringInfo)
         mainPage.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(mainPage)
         self.menubar.setObjectName(u"menubar")
@@ -130,7 +132,22 @@ class Ui_mainPage(object):
         self.retranslateUi(mainPage)
 
         QMetaObject.connectSlotsByName(mainPage)
-    # setupUi
+
+        self.saveButton.clicked.connect(self.save_clicked)  # Connect the save button to its function
+
+    def upload_clicked(self):
+        # Function to handle upload button click
+        file_dialog = QFileDialog()
+        file_dialog.setNameFilter("Images (*.png *.jpg *.jpeg)")
+        file_dialog.setFileMode(QFileDialog.ExistingFile)
+        if file_dialog.exec_():
+            file_paths = file_dialog.selectedFiles()
+            if file_paths:
+                new_image_path = file_paths[0]
+                self.uploaded_image_path = new_image_path
+                pixmap = QPixmap(new_image_path)
+                scaled_pixmap = pixmap.scaled(self.imagePane.size(), Qt.KeepAspectRatio)
+                self.imagePane.setPixmap(scaled_pixmap)
 
     def retranslateUi(self, mainPage):
         mainPage.setWindowTitle(QCoreApplication.translate("mainPage", u"MainWindow", None))
@@ -148,11 +165,12 @@ class Ui_mainPage(object):
         self.printButton.setText(QCoreApplication.translate("mainPage", u"Print", None))
         self.uploadButton.setText(QCoreApplication.translate("mainPage", u"Upload", None))
         self.showFullImageButton.setText(QCoreApplication.translate("mainPage", u"Show Full Image", None))
+        self.saveButton.setText(QCoreApplication.translate("mainPage", u"Save", None))  # Set text for save button
         self.nameField.setHtml(QCoreApplication.translate("mainPage", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
                                                                       "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
                                                                       "p, li { white-space: pre-wrap; }\n"
                                                                       "</style></head><body style=\" font-family:'Cantarell'; font-size:11pt; font-weight:400; font-style:normal;\">\n"
-                                                                      "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">John Smith</p>\n"
+                                                                      "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">EX) John Smith</p>\n"
                                                                       "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", None))
         self.nameLabel.setText(QCoreApplication.translate("mainPage", u"Name: ", None))
         self.dateLabel.setText(QCoreApplication.translate("mainPage", u"Date of Visit: ", None))
@@ -177,9 +195,53 @@ class Ui_mainPage(object):
         self.bdateDash1.setText(QCoreApplication.translate("mainPage", u"/", None))
         self.bdateDash2.setText(QCoreApplication.translate("mainPage", u"/", None))
         self.notesLabel.setText(QCoreApplication.translate("mainPage", u"Additional Notes: ", None))
-        self.saveInfo.setText(QCoreApplication.translate("mainPage", u"Save Patient Information", None))
         self.menuFile.setTitle(QCoreApplication.translate("mainPage", u"File", None))
         self.menuEdit.setTitle(QCoreApplication.translate("mainPage", u"Edit", None))
         self.menuAbout.setTitle(QCoreApplication.translate("mainPage", u"About", None))
         self.menuHelp.setTitle(QCoreApplication.translate("mainPage", u"Help", None))
-    # retranslateUi
+
+
+    def sanitize_filename(self,name):
+        valid_chars = "-_.() %s%s" % (string.ascii_letters, string.digits)
+        return ''.join(c for c in name if c in valid_chars)
+
+    def save_clicked(self):
+        name = self.sanitize_filename(self.nameField.toPlainText())
+        date_of_visit = f"{self.dateYear.toPlainText()}-{self.dateMonth.toPlainText()}-{self.dateDay.toPlainText()}"
+        date_of_birth = f"{self.bdateYear.toPlainText()}-{self.bdateMonth.toPlainText()}-{self.bdateDay.toPlainText()}"
+        additional_notes = self.contextPane.toPlainText()
+        image_path = "Resources/IMG0000019.jpg"
+
+        # Create a folder named 'download' if it doesn't exist
+        if not os.path.exists('download'):
+            os.makedirs('download')
+
+        # Construct filenames using user's name and birthdate
+        file_prefix = f"{name}_{date_of_birth}"
+
+        # Sanitize file prefix
+        file_prefix = self.sanitize_filename(file_prefix)
+
+        # Save the information into a text file
+        txt_file_name = f"download/{file_prefix}_info.txt"
+        with open(txt_file_name, 'w') as f:
+            f.write(f"Name: {name}\n")
+            f.write(f"Date of Visit: {date_of_visit}\n")
+            f.write(f"Date of Birth: {date_of_birth}\n")
+            f.write(f"Additional Notes:\n{additional_notes}")
+
+        # Save the uploaded image to the 'download' folder
+        if hasattr(self, 'uploaded_image_path'):  # Check if an image is uploaded
+            # Construct image filename
+            image_extension = os.path.splitext(self.uploaded_image_path)[1]
+            image_name = f"download/{file_prefix}_image{image_extension}"
+            shutil.copy(self.uploaded_image_path, image_name)
+
+        # Show a message box indicating successful save
+        msgBox = QMessageBox()
+        msgBox.setIcon(QMessageBox.Information)
+        msgBox.setText("Save Successful!")
+        msgBox.setWindowTitle("Success")
+        msgBox.setStandardButtons(QMessageBox.Ok)
+        msgBox.exec()
+
