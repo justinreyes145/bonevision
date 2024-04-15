@@ -52,7 +52,7 @@ class ui_firstPageRevised(object):
         self.iconLabel = QLabel(self.centralwidget)
         self.iconLabel.setObjectName(u"iconLabel")
         self.iconLabel.setGeometry(QRect(240, 140, 300, 271))
-        self.iconLabel.setPixmap(QPixmap("Resources/noun-bone-3858505.png"))
+        self.iconLabel.setPixmap(QPixmap("noun-bone-3858505.png"))
         self.uploadButton = QPushButton(self.centralwidget)
         self.uploadButton.setObjectName(u"uploadButton")
         self.uploadButton.clicked.connect(self.openWindow1)
