@@ -6,9 +6,16 @@ from truePatientInfoD import Ui_Dialog
 
 
 class ui_firstPageRevised(object):
+    curr_username = ''
+
+    def setUserName(self, username):
+        self.curr_username = username
+
+
     def openWindow(self):
         self.window = QMainWindow()
         self.ui = Ui_mainPage()
+        self.ui.setUserName(self.curr_username)
         self.ui.setupUi(self.window)
         self.window.show()
 
@@ -108,4 +115,6 @@ class ui_firstPageRevised(object):
         self.menuEdit.setTitle(QCoreApplication.translate("MainWindow", u"Edit", None))
         self.menuAbout.setTitle(QCoreApplication.translate("MainWindow", u"About", None))
         self.menuHelp.setTitle(QCoreApplication.translate("MainWindow", u"Help", None))
+
+        print(self.curr_username)
     # retranslateUi

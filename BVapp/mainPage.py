@@ -5,6 +5,7 @@ from PySide6.QtWidgets import QFileDialog
 from datetime import datetime
 import shutil
 import os
+from dbconn import insert_one
 import string
 from pymongo import MongoClient
 
@@ -14,6 +15,11 @@ db = client["Bonevision"]
 collection = db["user_info"]
 
 class Ui_mainPage(object):
+    curr_username = ''
+
+    def setUserName(self, username):
+        self.curr_username = username
+
     def saveStringInfo(self):
         patientName = self.nameField.toPlainText() #Use this as a template for the rest of the fields
         filename = "%s.txt" % patientName
@@ -200,6 +206,8 @@ class Ui_mainPage(object):
         self.menuAbout.setTitle(QCoreApplication.translate("mainPage", u"About", None))
         self.menuHelp.setTitle(QCoreApplication.translate("mainPage", u"Help", None))
 
+        print(self.curr_username)
+
 
     def sanitize_filename(self,name):
         valid_chars = "-_.() %s%s" % (string.ascii_letters, string.digits)
@@ -210,7 +218,10 @@ class Ui_mainPage(object):
         date_of_visit = f"{self.dateYear.toPlainText()}-{self.dateMonth.toPlainText()}-{self.dateDay.toPlainText()}"
         date_of_birth = f"{self.bdateYear.toPlainText()}-{self.bdateMonth.toPlainText()}-{self.bdateDay.toPlainText()}"
         additional_notes = self.contextPane.toPlainText()
-        image_path = "Resources/IMG0000019.jpg"
+        image_path = "IMG0000019.jpg"
+
+        insert_one(self.curr_username, name, date_of_visit, date_of_birth, 'foot',
+                   'yes', image_path, additional_notes)
 
         # Create a folder named 'download' if it doesn't exist
         if not os.path.exists('download'):

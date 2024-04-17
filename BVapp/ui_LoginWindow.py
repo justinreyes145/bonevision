@@ -4,6 +4,7 @@ import bcrypt
 import os
 
 class ui_LoginWindow(QObject):
+    curr_username = ''
     def setupUi(self, LoginWindow):
         LoginWindow.setObjectName("LoginWindow")
         LoginWindow.resize(800, 600)
@@ -56,6 +57,7 @@ class ui_LoginWindow(QObject):
         password = self.lineEditPass.text().strip()
 
         if self.authenticate_user(username, password):
+            self.curr_username = username
             self.openFirstPage()
         else:
             QMessageBox.warning(None, "Login Failed", "Username or password does not match our records.")
@@ -77,5 +79,6 @@ class ui_LoginWindow(QObject):
         from ui_firstPageRevised import ui_firstPageRevised
         self.first_page_window = QMainWindow()
         self.first_page_ui = ui_firstPageRevised()
+        self.first_page_ui.setUserName(self.curr_username)
         self.first_page_ui.setupUi(self.first_page_window)
         self.first_page_window.show()
