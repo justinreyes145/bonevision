@@ -1,85 +1,73 @@
 import sqlite3
 
-try:
-    # Connect to DB and create a cursor
-    sqliteConnection = sqlite3.connect('patient_info.db')
-    cursor = sqliteConnection.cursor()
-    print('DB Init')
 
-    # Write a query and execute it with cursor
-    query = 'select sqlite_version();'
-    cursor.execute(query)
+def create_table():
+    try:
+        # Connecting to sqlite db
+        conn = sqlite3.connect('patient_info.db')
 
-    # Fetch and output result
-    result = cursor.fetchall()
-    print('SQLite Version is {}'.format(result))
+        # Creating a cursor object using the cursor() method
+        cursor = conn.cursor()
 
-    # Close the cursor
-    cursor.close()
-# Handle errors
-except sqlite3.Error as error:
-    print('Error occurred - ', error)
-# Close DB Connection irrespective of success or failure
-finally:
-    if sqliteConnection:
-        sqliteConnection.close()
-        print('SQLite Connection closed')
+        # Creating table
+        table = """ CREATE TABLE patients (
+                    First_Name CHAR(25) NOT NULL,
+                    Last_Name CHAR(25),
+                    Visit_Date DATE,
+                    Birth_Date DATE,
+                    Fracture CHAR(3),
+                    Image_Path CHAR(25),
+                    Notes MEDIUMTEXT
+                ); """
+        cursor.execute(table)
 
-def testCreate():
-    # Connecting to sqlite
-    # connection object
-    connection_obj = sqlite3.connect('patient_info.db')
+        # Committing changes in the database and closing the connection
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(e)
 
-    # cursor object
-    cursor_obj = connection_obj.cursor()
 
-    # Drop the GEEK table if already exists.
-    cursor_obj.execute("DROP TABLE IF EXISTS patients")
+def insert_one(first_name, last_name, visit_date, birth_date, is_fractured, image_path, notes):
+    try:
+        # Connecting to sqlite db
+        conn = sqlite3.connect('patient_info.db')
 
-    # Creating table
-    table = """ CREATE TABLE patients (
-                First_Name CHAR(25) NOT NULL,
-                Last_Name CHAR(25),
-                Date DATE
-            ); """
+        # Creating a cursor object using the cursor() method
+        cursor = conn.cursor()
 
-    cursor_obj.execute(table)
+        # Inserting values with parametrized input to prevent SQL injection
+        table = """ INSERT INTO patient_info.patients
+                    VALUES (?); """
+        cursor.execute(table, (first_name, last_name, visit_date, birth_date, is_fractured, image_path, notes))
 
-    print("Table is Ready")
+        # Committing changes in the database and closing the connection
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(e)
 
-    # Close the connection
-    connection_obj.close()
 
-def insert():
-    # Connecting to sqlite
-    conn = sqlite3.connect('patient_info.db')
+def find_first_name(first_name):
+    try:
+        # Connecting to sqlite db
+        conn = sqlite3.connect('patient_info.db')
 
-    # Creating a cursor object using the
-    # cursor() method
-    cursor = conn.cursor()
+        # Creating a cursor object using the cursor() method
+        cursor = conn.cursor()
 
-    # Creating table
-    table = """ CREATE TABLE patients (
-                First_Name CHAR(25) NOT NULL,
-                Last_Name CHAR(25),
-                Date DATE
-            ); """
-    # cursor.execute(table)
+        # Selecting values with parametrized input to prevent SQL injection
+        find = """ SELECT * FROM patients WHERE first_name = ?"""
+        data = cursor.execute(find, (first_name,))
+        for row in data:
+            print(row)
 
-    # Queries to INSERT records.
-    # cursor.execute('''INSERT INTO patients VALUES ('Cheol', 'Reyes', '1111-11-11')''')
+    # Committing changes in the database and closing the connection
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(e)
 
-    # Display data inserted
-    print("Data Inserted in the table: ")
-    data = cursor.execute('''SELECT * FROM patients WHERE Last_Name = "Reyes" AND First_Name = "Justin"''')
-    for row in data:
-        print(row)
 
-    # Commit your changes in the database
-    conn.commit()
-
-    # Closing the connection
-    conn.close()
-
-# testCreate()
-insert()
+# Run this once to create the db file and table
+# create_table()
