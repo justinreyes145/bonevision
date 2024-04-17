@@ -3,7 +3,7 @@ from PySide6.QtWidgets import QMainWindow, QWidget, QLabel, QLineEdit, QPushButt
 import bcrypt
 import os
 
-class ui_LoginWindow(QObject):
+class ui_LoginWindow(QMainWindow):
     curr_username = ''
     def setupUi(self, LoginWindow):
         LoginWindow.setObjectName("LoginWindow")
@@ -82,3 +82,4 @@ class ui_LoginWindow(QObject):
         self.first_page_ui.setUserName(self.curr_username)
         self.first_page_ui.setupUi(self.first_page_window)
         self.first_page_window.show()
+        self.centralwidget.window().close()

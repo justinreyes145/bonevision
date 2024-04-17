@@ -18,6 +18,7 @@ class ui_firstPageRevised(object):
         self.ui.setUserName(self.curr_username)
         self.ui.setupUi(self.window)
         self.window.show()
+        self.centralwidget.window().close()
 
     def openWindow1(self):
         self.window = QMainWindow()

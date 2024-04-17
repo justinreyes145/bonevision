@@ -48,3 +48,4 @@ class RegisterWindow(QMainWindow):
         # Clear input fields after successful registration
         self.usernameLineEdit.clear()
         self.passwordLineEdit.clear()
+        self.close()
