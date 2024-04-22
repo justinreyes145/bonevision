@@ -64,14 +64,15 @@ def find_name(name, username):
         # Selecting values with parametrized input to prevent SQL injection
         find = """ SELECT * FROM patients WHERE Name LIKE ? AND Username = ?"""
         data = cursor.execute(find, (name,username,))
-        for row in data:
-            print(row)
+        values = list(data)
 
-    # Committing changes in the database and closing the connection
+        # Committing changes in the database and closing the connection
         conn.commit()
         conn.close()
+        return values
     except sqlite3.Error as e:
         print(e)
+        return None
 
 
 # Run this once to create the db file and table
@@ -92,4 +93,6 @@ insert_one('dog', 'Michael Reyes', '2024-04-14', '2000-01-01', 'Elbow', 'Yes',
 find_name('', 'cat')
 '''
 
-find_name('', 'cat')
+if __name__ == '__main__':
+    for row in find_name('', 'cat'):
+        print(row)
