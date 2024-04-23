@@ -8,6 +8,7 @@ import os
 from dbconn import insert_one
 import string
 from pymongo import MongoClient
+from classifier import *
 
 
 client = MongoClient("mongodb://localhost:27017/")
@@ -154,6 +155,8 @@ class Ui_mainPage(object):
                 pixmap = QPixmap(new_image_path)
                 scaled_pixmap = pixmap.scaled(self.imagePane.size(), Qt.KeepAspectRatio)
                 self.imagePane.setPixmap(scaled_pixmap)
+
+                predict_image(new_image_path)
 
     def retranslateUi(self, mainPage):
         mainPage.setWindowTitle(QCoreApplication.translate("mainPage", u"MainWindow", None))
