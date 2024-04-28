@@ -2,29 +2,24 @@ from PySide6.QtCore import QRect, QCoreApplication, QMetaObject
 from PySide6.QtGui import QFont, QPixmap, QAction
 from PySide6.QtWidgets import QMainWindow, QWidget, QLabel, QPushButton, QMenuBar, QMenu, QFileDialog, QStatusBar
 from mainPage import Ui_mainPage  # Assuming mainPage is another UI file
-from truePatientInfoD import Ui_Dialog
+from history import HistorySearchPage
+
 
 
 class ui_firstPageRevised(object):
-    curr_username = ''
-
-    def setUserName(self, username):
-        self.curr_username = username
-
-
     def openWindow(self):
         self.window = QMainWindow()
         self.ui = Ui_mainPage()
-        self.ui.setUserName(self.curr_username)
         self.ui.setupUi(self.window)
         self.window.show()
-        self.centralwidget.window().close()
 
     def openWindow1(self):
-        self.window = QMainWindow()
-        self.ui = Ui_Dialog()
-        self.ui.setupUi1(self.window)
+        self.window = HistorySearchPage()  # Open HistorySearchPage directly
         self.window.show()
+        # Close the current window
+        self.window1.close()
+
+
 
     def openFileManager(self):
         fileChosen, _ = QFileDialog.getOpenFileName(self.window, "Open Image", "~/", "All Files(*)", "", QFileDialog.ReadOnly)
@@ -60,7 +55,7 @@ class ui_firstPageRevised(object):
         self.iconLabel = QLabel(self.centralwidget)
         self.iconLabel.setObjectName(u"iconLabel")
         self.iconLabel.setGeometry(QRect(240, 140, 300, 271))
-        self.iconLabel.setPixmap(QPixmap("noun-bone-3858505.png"))
+        self.iconLabel.setPixmap(QPixmap("Resources/noun-bone-3858505.png"))
         self.uploadButton = QPushButton(self.centralwidget)
         self.uploadButton.setObjectName(u"uploadButton")
         self.uploadButton.clicked.connect(self.openWindow1)
@@ -116,6 +111,4 @@ class ui_firstPageRevised(object):
         self.menuEdit.setTitle(QCoreApplication.translate("MainWindow", u"Edit", None))
         self.menuAbout.setTitle(QCoreApplication.translate("MainWindow", u"About", None))
         self.menuHelp.setTitle(QCoreApplication.translate("MainWindow", u"Help", None))
-
-        print(self.curr_username)
     # retranslateUi
