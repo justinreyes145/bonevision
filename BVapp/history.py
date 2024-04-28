@@ -75,4 +75,3 @@ if __name__ == "__main__":
     history_search_page = HistorySearchPage()
     history_search_page.show()
     app.exec()
-
