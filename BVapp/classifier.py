@@ -89,21 +89,21 @@ def predict_image(image_path):
     fracture_prediction = None
 
     match max_index:
-        case 0:
-            fracture_prediction = predict_elbow(image_path)
-        case 1:
-            fracture_prediction = predict_finger(image_path)
-        case 2:
-            fracture_prediction = predict_forearm(image_path)
-        case 3:
-            fracture_prediction = predict_hand(image_path)
-        case 4:
-            fracture_prediction = predict_humerus(image_path)
-        case 5:
-            fracture_prediction = predict_shoulder(image_path)
-        case 6:
-            fracture_prediction = predict_wrist(image_path)
-        case 7:
-            return None
+         case 0:
+             fracture_prediction = predict_elbow(image_path)
+         case 1:
+             fracture_prediction = predict_finger(image_path)
+         case 2:
+             fracture_prediction = predict_forearm(image_path)
+         case 3:
+             fracture_prediction = predict_hand(image_path)
+         case 4:
+             fracture_prediction = predict_humerus(image_path)
+         case 5:
+             fracture_prediction = predict_shoulder(image_path)
+         case 6:
+             fracture_prediction = predict_wrist(image_path)
+         case 7:
+             return None
 
     print(fracture_prediction)

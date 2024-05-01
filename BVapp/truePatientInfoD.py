@@ -4,6 +4,7 @@ from PySide6.QtWidgets import *
 from pymongo import MongoClient
 from mainPage import Ui_mainPage
 
+
 class Ui_Dialog(object):
     def setupUi1(self, Dialog):
         if not Dialog.objectName():

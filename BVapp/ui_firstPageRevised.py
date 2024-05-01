@@ -1,7 +1,7 @@
 from PySide6.QtCore import QRect, QCoreApplication, QMetaObject
 from PySide6.QtGui import QFont, QPixmap, QAction
 from PySide6.QtWidgets import QMainWindow, QWidget, QLabel, QPushButton, QMenuBar, QMenu, QFileDialog, QStatusBar
-from mainPage import Ui_mainPage  # Assuming mainPage is another UI file
+from mainPage import Ui_mainPage
 from truePatientInfoD import Ui_Dialog
 
 
@@ -10,7 +10,6 @@ class ui_firstPageRevised(object):
 
     def setUserName(self, username):
         self.curr_username = username
-
 
     def openWindow(self):
         self.window = QMainWindow()

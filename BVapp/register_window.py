@@ -1,17 +1,18 @@
 from PySide6.QtWidgets import QMainWindow, QWidget, QLabel, QLineEdit, QPushButton, QMessageBox
 import bcrypt
 
+
 def save_user(username, password):
     hashed_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
     with open('user_credentials.txt', 'a') as file:
         file.write(f"{username},{hashed_password.decode()}\n")
+
 
 class RegisterWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Register")
         self.setGeometry(200, 200, 400, 250)  # Set window position and size
-
 
         self.centralWidget = QWidget(self)
         self.setCentralWidget(self.centralWidget)

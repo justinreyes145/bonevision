@@ -156,7 +156,7 @@ class Ui_mainPage(object):
                 scaled_pixmap = pixmap.scaled(self.imagePane.size(), Qt.KeepAspectRatio)
                 self.imagePane.setPixmap(scaled_pixmap)
 
-                predict_image(new_image_path)
+                #predict_image(new_image_path)
 
     def retranslateUi(self, mainPage):
         mainPage.setWindowTitle(QCoreApplication.translate("mainPage", u"MainWindow", None))
@@ -258,4 +258,3 @@ class Ui_mainPage(object):
         msgBox.setWindowTitle("Success")
         msgBox.setStandardButtons(QMessageBox.Ok)
         msgBox.exec()
-
