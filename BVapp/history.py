@@ -2,6 +2,7 @@ from PySide6.QtCore import *
 from PySide6.QtGui import *
 from PySide6.QtWidgets import *
 from pymongo import MongoClient
+from dbconn import *
 
 # Connect to MongoDB
 client = MongoClient("mongodb://localhost:27017/")
@@ -49,8 +50,25 @@ class HistorySearchPage(QMainWindow):
 
         layout.addLayout(self.buttonLayout)
 
-        self.searchButton.clicked.connect(self.search_history)
+        self.searchButton.clicked.connect(self.callDB)
 
+    def callDB(self):
+        query = find_name(self.searchLineEdit.text(), 'cat')
+        result_row = 0
+        result_column = 2
+        result_portion = 0
+        self.resultsTable.setRowCount(len(query))
+        for row in query:
+            for item in row:
+                if result_column >= 4 and result_column != 9:
+                    print(item)
+                    self.resultsTable.setItem(result_row, result_portion, QTableWidgetItem(item))
+                    result_portion+=1
+                result_column +=1;
+            result_row+=1
+
+
+'''
     def search_history(self):
         name = self.searchLineEdit.text().strip()
         if name:
@@ -67,7 +85,7 @@ class HistorySearchPage(QMainWindow):
                 self.resultsTable.setItem(row_position, 0, QTableWidgetItem(visit_date))
                 self.resultsTable.setItem(row_position, 1, QTableWidgetItem(birth_date))
                 self.resultsTable.setItem(row_position, 2, QTableWidgetItem(result))
-                self.resultsTable.setItem(row_position, 3, QTableWidgetItem(image_path))
+                self.resultsTable.setItem(row_position, 3, QTableWidgetItem(image_path))'''
 
 # Example usage:
 if __name__ == "__main__":
