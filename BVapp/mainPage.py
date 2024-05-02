@@ -7,13 +7,8 @@ import shutil
 import os
 from dbconn import insert_one
 import string
-from pymongo import MongoClient
 from classifier import *
 
-
-client = MongoClient("mongodb://localhost:27017/")
-db = client["Bonevision"]
-collection = db["user_info"]
 
 class Ui_mainPage(object):
     curr_username = ''
@@ -151,12 +146,14 @@ class Ui_mainPage(object):
             file_paths = file_dialog.selectedFiles()
             if file_paths:
                 new_image_path = file_paths[0]
+                print(new_image_path)
+                shutil.copy(new_image_path, f'./temp/class1/temp.png')
                 self.uploaded_image_path = new_image_path
                 pixmap = QPixmap(new_image_path)
                 scaled_pixmap = pixmap.scaled(self.imagePane.size(), Qt.KeepAspectRatio)
                 self.imagePane.setPixmap(scaled_pixmap)
 
-                #predict_image(new_image_path)
+                predict_image()
 
     def retranslateUi(self, mainPage):
         mainPage.setWindowTitle(QCoreApplication.translate("mainPage", u"MainWindow", None))
