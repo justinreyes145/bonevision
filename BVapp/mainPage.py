@@ -6,6 +6,7 @@ from datetime import datetime
 import shutil
 import os
 from dbconn import insert_one
+from image_enhancement import process_img
 import string
 from classifier import *
 
@@ -147,11 +148,13 @@ class Ui_mainPage(object):
             if file_paths:
                 new_image_path = file_paths[0]
                 print(new_image_path)
-                shutil.copy(new_image_path, f'./temp/class1/temp.png')
+                process_img(new_image_path)
+
                 self.uploaded_image_path = new_image_path
                 pixmap = QPixmap(new_image_path)
                 scaled_pixmap = pixmap.scaled(self.imagePane.size(), Qt.KeepAspectRatio)
                 self.imagePane.setPixmap(scaled_pixmap)
+                self.centralwidget.update()
 
                 predict_image()
 
