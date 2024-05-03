@@ -26,9 +26,10 @@ class Ui_mainPage(object):
 
     def scan_clicked(self):
         if hasattr(self, 'uploaded_image_path'):
-            predict_image()
+            predict_image(self.outputPane)
         else:
             QMessageBox.warning(self.centralwidget, "Warning", "No image uploaded!", QMessageBox.Ok)
+
 
     def setUserName(self, username):
         self.curr_username = username
@@ -119,9 +120,7 @@ class Ui_mainPage(object):
         self.notesLabel = QLabel(self.centralwidget)
         self.notesLabel.setObjectName(u"notesLabel")
         self.notesLabel.setGeometry(QRect(10, 210, 150, 19))
-        self.saveInfo = QPushButton(self.centralwidget)
-        self.saveInfo.setObjectName(u"saveInfo")
-        self.saveInfo.setGeometry(QRect(60, 510, 200, 27))
+
         mainPage.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(mainPage)
         self.menubar.setObjectName(u"menubar")
@@ -190,18 +189,24 @@ class Ui_mainPage(object):
         self.actionNew.setText(QCoreApplication.translate("mainPage", u"New", None))
         self.actionOpen.setText(QCoreApplication.translate("mainPage", u"Open", None))
         self.actionClose.setText(QCoreApplication.translate("mainPage", u"Close", None))
+
         self.outputPane.setHtml(QCoreApplication.translate("mainPage", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
                                                                        "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
                                                                        "p, li { white-space: pre-wrap; }\n"
-                                                                       "</style></head><body style=\" font-family:'Cantarell'; font-size:11pt; font-weight:400; font-style:normal;\">\n"
-                                                                       "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Output Text</p>\n"
-                                                                       "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Goes Here</p>\n"
-                                                                       "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", None))
+                                                                       ".vertical-text { writing-mode: vertical-rl; }\n"  # Add this line for vertical text
+                                                                       "</style></head><body style=\" font-family:'Cantarell'; font-size:11pt; font-weight:400; font-style:normal; text-align: center;\">\n"
+                                                                       "<p class='vertical-text' style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"></p>\n"
+                                                                       "<p class='vertical-text' style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"></p>\n"
+                                                                       "<p class='vertical-text' style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", None))
+
+
+
         self.imagePane.setText("")
         self.printButton.setText(QCoreApplication.translate("mainPage", u"Print", None))
         self.uploadButton.setText(QCoreApplication.translate("mainPage", u"Upload", None))
         self.showFullImageButton.setText(QCoreApplication.translate("mainPage", u"Show Full Image", None))
-        self.saveButton.setText(QCoreApplication.translate("mainPage", u"Save", None))  # Set text for save button
+        self.saveButton.setText(QCoreApplication.translate("mainPage", u"Save", None))
+        # Set text for save button
         self.nameField.setHtml(QCoreApplication.translate("mainPage", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
                                                                       "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
                                                                       "p, li { white-space: pre-wrap; }\n"
@@ -236,7 +241,7 @@ class Ui_mainPage(object):
         self.menuAbout.setTitle(QCoreApplication.translate("mainPage", u"About", None))
         self.menuHelp.setTitle(QCoreApplication.translate("mainPage", u"Help", None))
 
-        self.backButton.setText(QCoreApplication.translate("MainWindow", u"GoBack", None))
+        self.backButton.setText(QCoreApplication.translate("MainWindow", u"Back", None))
 
         self.scanButton.setText(QCoreApplication.translate("mainPage", u"Scan Now", None))
 

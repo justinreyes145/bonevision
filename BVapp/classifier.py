@@ -1,3 +1,4 @@
+import self
 import tensorflow as tf
 from keras_preprocessing.image import ImageDataGenerator
 from tensorflow import keras
@@ -114,7 +115,7 @@ def predict_bone(image_path):
     image = load_image(image_path, 224)
     return bone_model.predict(image)
 
-def predict_image():
+def predict_image(outputPane):
     image_path = ('temp')
     bone_type = np.array(predict_bone(image_path))
     max_index = np.argmax(bone_type[0])
@@ -140,5 +141,14 @@ def predict_image():
         case 7:
             return None
 
-    result = f'{fracture_prediction[0] * 100}% chance of {bone_labels[max_index]} fracture'
-    print(result)
+    percentage = fracture_prediction[0][0] * 100
+    # move two decimal places
+    result = f'{percentage:.2f}% chance of {bone_labels[max_index]} fracture'
+    # display the result
+    html_result = f'<div style="text-align: center; font-size: 50px;">{result}</div>'
+
+    # update the output pane HTML with the result
+    outputPane.setHtml(html_result)
+
+
+
