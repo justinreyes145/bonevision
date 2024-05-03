@@ -1,13 +1,9 @@
 from PySide6.QtCore import *
 from PySide6.QtGui import *
+from PySide6 import QtWidgets
 from PySide6.QtWidgets import *
-from pymongo import MongoClient
 from dbconn import *
 
-# Connect to MongoDB
-client = MongoClient("mongodb://localhost:27017/")
-db = client["Bonevision"]
-collection = db["user_info"]
 
 class HistorySearchPage(QMainWindow):
     def __init__(self):
@@ -25,7 +21,7 @@ class HistorySearchPage(QMainWindow):
         layout.setSpacing(20)  # Set larger gap between widgets
 
         self.searchLayout = QHBoxLayout()
-        self.searchLabel = QLabel("Enter Name:")
+        self.searchLabel = QtWidgets.QLabel("Enter Name:")
         self.searchLineEdit = QLineEdit()
         self.searchButton = QPushButton("Search")
         self.searchLayout.addWidget(self.searchLabel)
@@ -44,9 +40,9 @@ class HistorySearchPage(QMainWindow):
         # Add View Detail and Add New Patient Info buttons
         self.buttonLayout = QHBoxLayout()
         self.viewDetailButton = QPushButton("View Detail")
-        self.addPatientInfoButton = QPushButton("Add New Patient Info")
+        # self.addPatientInfoButton = QPushButton("Add New Patient Info")
         self.buttonLayout.addWidget(self.viewDetailButton)
-        self.buttonLayout.addWidget(self.addPatientInfoButton)
+        # self.buttonLayout.addWidget(self.addPatientInfoButton)
 
         layout.addLayout(self.buttonLayout)
 
@@ -55,16 +51,15 @@ class HistorySearchPage(QMainWindow):
     def callDB(self):
         query = find_name(self.searchLineEdit.text(), 'cat')
         result_row = 0
-        result_column = 2
-        result_portion = 0
         self.resultsTable.setRowCount(len(query))
         for row in query:
-            for item in row:
-                if result_column >= 4 and result_column != 9:
-                    #print(item)
-                    self.resultsTable.setItem(result_row, result_portion, QTableWidgetItem(item))
-                    result_portion+=1
-                result_column +=1
+            self.resultsTable.setItem(result_row, 0, QTableWidgetItem(row[2]))
+            self.resultsTable.setItem(result_row, 1, QTableWidgetItem(row[3]))
+            self.resultsTable.setItem(result_row, 2, QTableWidgetItem(row[4]))
+            self.resultsTable.setItem(result_row, 3, QTableWidgetItem(row[5]))
+            self.resultsTable.setItem(result_row, 4, QTableWidgetItem(row[6]))
+            self.resultsTable.setItem(result_row, 5, QTableWidgetItem(row[8]))
+            result_row += 1
             #Need to reset a value here
 
 # Example usage:

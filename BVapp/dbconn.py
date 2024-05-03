@@ -94,5 +94,6 @@ find_name('', 'cat')
 '''
 
 if __name__ == '__main__':
-    for row in find_name('', 'cat'):
+    entries = find_name('', 'cat')
+    for row in entries:
         print(row)

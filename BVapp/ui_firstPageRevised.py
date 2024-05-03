@@ -51,7 +51,7 @@ class ui_firstPageRevised(object):
         self.nameLabel.setObjectName(u"nameLabel")
         self.nameLabel.setGeometry(QRect(250, 50, 301, 45))
         font = QFont()
-        font.setPointSize(45)
+        font.setPointSize(40)
         self.nameLabel.setFont(font)
         self.descLabel = QLabel(self.centralwidget)
         self.descLabel.setObjectName(u"descLabel")

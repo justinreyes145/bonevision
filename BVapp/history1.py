@@ -1,8 +1,9 @@
 from PySide6.QtCore import *
 from PySide6.QtGui import *
+from PySide6 import QtWidgets
 from PySide6.QtWidgets import *
 from pymongo import MongoClient
-from mainPage import Ui_mainPage
+# from mainPage import Ui_mainPage
 
 
 # Connect to MongoDB
@@ -28,9 +29,9 @@ class HistorySearchPage(QMainWindow):
         layout.setSpacing(20)  # Set larger gap between widgets
 
         self.searchLayout = QHBoxLayout()
-        self.searchLabel = QLabel("Enter Name:")
-        self.searchLineEdit = QLineEdit()
-        self.searchButton = QPushButton("Search")
+        self.searchLabel = QtWidgets.QLabel("Enter Name:")
+        self.searchLineEdit = QtWidgets.QLineEdit()
+        self.searchButton = QtWidgets.QPushButton("Search")
         self.searchLayout.addWidget(self.searchLabel)
         self.searchLayout.addWidget(self.searchLineEdit)
         self.searchLayout.addWidget(self.searchButton)
