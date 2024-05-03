@@ -8,55 +8,64 @@ from skimage.io import imread
 
 import threading
 
-def load_frac_model():
+def load_frac_model(weights_path):
+    st = time.time()
     with open('models/model.json', 'r') as model_data:
         loaded_model_json = model_data.read()
-        return keras.models.model_from_json(loaded_model_json)
-
+        model = keras.models.model_from_json(loaded_model_json)
+        model.load_weights(weights_path)
+        model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+        print(f'Time elapsed = {time.time() - st} sec (' + weights_path + ")")
+        return model
 
 def load_bone_model():
+    st = time.time()        
     with open('models/bone_model.json', 'r') as model_data:
         loaded_model_json = model_data.read()
-        return keras.models.model_from_json(loaded_model_json)
+        global bone_model
+        bone_model = keras.models.model_from_json(loaded_model_json)
+        bone_model.load_weights('models/bone_weights.keras')
+        bone_model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+        print(f'Time elapsed = {time.time() - st} sec (Bone Model)')
 
-def thread_load_frac_model(model, weights_path):
-    st = time.time()
-    model.load_weights(weights_path)
-    model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
-    print(f'Time elapsed = {time.time() - st} sec (' + weights_path + ")")
+def load_wrist_model():
+    global wrist_model
+    wrist_model = load_frac_model('models/wrist_86.65_weights.keras')
 
-def thread_load_bone_model(model):
-    st = time.time()
-    model.load_weights('models/bone_weights.keras')
-    model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
-    print(f'Time elapsed = {time.time() - st} sec (Bone Model)')
+def load_hand_model():
+    global hand_model
+    hand_model = load_frac_model('models/hand_79.96_weights.keras')
+
+def load_forearm_model():
+    global forearm_model
+    forearm_model = load_frac_model('models/forearm_80.07_weights.keras')
+
+def load_shoulder_model():
+    global shoulder_model
+    shoudler_model = load_frac_model('models/shoulder_81.53_weights.keras')
+
+def load_elbow_model():
+    global elbow_model
+    elbow_model = load_frac_model('models/elbow_86.67_weights.keras')
+
+def load_finger_model():
+    global finger_model 
+    finger_model = load_frac_model('models/finger_80.04_weights.keras')
+
+def load_humerus_model():
+    global humerus_model 
+    humerus_model = load_frac_model('models/humerus_88.89_weights.keras')
+
 
 # Load all model architectures
-bone_model = load_bone_model()
-elbow_model = load_frac_model()
-finger_model = load_frac_model()
-forearm_model = load_frac_model()
-hand_model = load_frac_model()
-humerus_model = load_frac_model()
-shoulder_model = load_frac_model()
-wrist_model = load_frac_model()
-
-t0 = threading.Thread(target=thread_load_bone_model, args=(bone_model,))
-t0.start()
-t1 = threading.Thread(target=thread_load_frac_model, args=(wrist_model, 'models/wrist_86.65_weights.keras'))
-t1.start()
-t2 = threading.Thread(target=thread_load_frac_model, args=(humerus_model, 'models/humerus_88.89_weights.keras'))
-t2.start()
-t3 = threading.Thread(target=thread_load_frac_model, args=(forearm_model, 'models/forearm_80.07_weights.keras'))
-t3.start()
-t4 = threading.Thread(target=thread_load_frac_model, args=(hand_model, 'models/hand_79.96_weights.keras'))
-t4.start()
-t5 = threading.Thread(target=thread_load_frac_model, args=(elbow_model, 'models/elbow_86.67_weights.keras'))
-t5.start()
-t6 = threading.Thread(target=thread_load_frac_model, args=(shoulder_model, 'models/shoulder_81.53_weights.keras'))
-t6.start()
-t7 = threading.Thread(target=thread_load_frac_model, args=(finger_model, 'models/finger_80.04_weights.keras'))
-t7.start()
+threading.Thread(target=load_bone_model).start()
+threading.Thread(target=load_wrist_model).start()
+threading.Thread(target=load_hand_model).start()
+threading.Thread(target=load_forearm_model).start()
+threading.Thread(target=load_shoulder_model).start()
+threading.Thread(target=load_elbow_model).start()
+threading.Thread(target=load_finger_model).start()
+threading.Thread(target=load_humerus_model).start()
 
 bone_labels = ['ELBOW', 'FINGER', 'FOREARM', 'HAND', 'HUMERUS', 'SHOULDER', 'WRIST']
 
