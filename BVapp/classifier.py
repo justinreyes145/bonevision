@@ -21,7 +21,6 @@ def load_bone_model():
 
 def thread_load_frac_model(model, weights_path):
     st = time.time()
-    model = load_frac_model()
     model.load_weights(weights_path)
     model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
     print(f'Time elapsed = {time.time() - st} sec (' + weights_path + ")")
@@ -29,21 +28,20 @@ def thread_load_frac_model(model, weights_path):
 
 def thread_load_bone_model(model):
     st = time.time()
-    model = load_bone_model()
     model.load_weights('models/bone_weights.keras')
     model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
     print(f'Time elapsed = {time.time() - st} sec (Bone Model)')
     return model
 
 # Load all model architectures
-bone_model = None
-elbow_model = None
-finger_model = None
-forearm_model = None
-hand_model = None
-humerus_model = None
-shoulder_model = None
-wrist_model = None
+global bone_model = load_bone_model()
+global elbow_model = load_frac_model()
+global finger_model = load_frac_model()
+global forearm_model = load_frac_model()
+global hand_model = load_frac_model()
+global humerus_model = load_frac_model()
+global shoulder_model = load_frac_model()
+global wrist_model = load_frac_model()
 
 t0 = threading.Thread(target=thread_load_bone_model, args=(bone_model,))
 t0.start()
