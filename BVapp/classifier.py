@@ -82,11 +82,22 @@ def predict(model, image_path):
         return None
         
     # weights not loaded
+    if not model.weights:
+        return None
+    image = load_image(image_path, 512)
+    return model.predict(image)
+
+def predict_bone(image_path):
+    # model not loaded
+    if bone_model == None:
+        return None
+        
+    # weights not loaded
     if not bone_model.weights:
         return None
     image = load_image(image_path, 224)
-    return model.predict(image)
-  
+    return bone_model.predict(image)
+
 def predict_image():
     image_path = ('temp')
     image = load_image(image_path, 224)
