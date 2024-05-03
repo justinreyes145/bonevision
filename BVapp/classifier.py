@@ -1,7 +1,4 @@
-import os
-
 import tensorflow as tf
-from PySide6.QtWidgets import QMessageBox
 from keras_preprocessing.image import ImageDataGenerator
 from tensorflow import keras
 import numpy as np
@@ -22,37 +19,21 @@ def load_bone_model():
         loaded_model_json = model_data.read()
         return keras.models.model_from_json(loaded_model_json)
 
-def thread_load_all_models():
+def thread_load_frac_model(model, weights_path):
     st = time.time()
-    bone_model = load_bone_model()
-    bone_model.load_weights('models/bone_weights.keras')
-    bone_model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+    model = load_frac_model()
+    model.load_weights(weights_path)
+    model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+    print(f'Time elapsed = {time.time() - st} sec (' + weights_path + ")")
+    return model
 
-    elbow_model = load_frac_model()
-    elbow = True
-    print(f'Time elapsed = {time.time() - st} sec (Elbow)')
-
-    finger_model = keras.models.load_model('models/dense169_finger_70_07_acc.keras', compile=False)
-    finger = True
-
-    forearm_model = keras.models.load_model('models/dense169_forearm_75_75_acc.keras', compile=False)
-    forearm = True
-
-    hand_model = load_frac_model()
-    hand = True
-
-    humerus_model = load_frac_model()
-    humerus = True
-
-    shoulder_model = keras.models.load_model('models/dense169_shoulder_70_69_acc.keras', compile=False)
-    shoulder = True
-
-    wrist_model = keras.models.load_model('models/dense169_wrist_75_42_acc.keras', compile=False)
-    wrist = True
-
-    print(f'Time elapsed = {time.time() - st} sec (Bone)')
+def thread_load_bone_model(model):
     st = time.time()
-    
+    model = load_bone_model()
+    model.load_weights('models/bone_weights.keras')
+    model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+    print(f'Time elapsed = {time.time() - st} sec (Bone Model)')
+    return model
 
 # Load all model architectures
 bone_model = None
@@ -63,8 +44,23 @@ hand_model = None
 humerus_model = None
 shoulder_model = None
 wrist_model = None
-model_loading_thread = threading.Thread(target=thread_load_all_models)
-model_loading_thread.start()
+
+t0 = threading.Thread(target=thread_load_bone_model, args=(bone_model,))
+t0.start()
+t1 = threading.Thread(target=thread_load_frac_model, args=(wrist_model, 'models/wrist_86.65_weights.keras'))
+t1.start()
+t2 = threading.Thread(target=thread_load_frac_model, args=(humerus_model, 'models/humerus_88.89_weights.keras'))
+t2.start()
+t3 = threading.Thread(target=thread_load_frac_model, args=(forearm_model, 'models/forearm_80.07_weights.keras'))
+t3.start()
+t4 = threading.Thread(target=thread_load_frac_model, args=(hand_model, 'models/hand_79.96_weights.keras'))
+t4.start()
+t5 = threading.Thread(target=thread_load_frac_model, args=(elbow_model, 'models/elbow_86.67_weights.keras'))
+t5.start()
+t6 = threading.Thread(target=thread_load_frac_model, args=(shoulder_model, 'models/shoulder_81.53_weights.keras'))
+t6.start()
+t7 = threading.Thread(target=thread_load_frac_model, args=(finger_model, 'models/finger_80.04_weights.keras'))
+t7.start()
 
 bone_labels = ['ELBOW', 'FINGER', 'FOREARM', 'HAND', 'HUMERUS', 'SHOULDER', 'WRIST']
 
@@ -80,123 +76,23 @@ def load_image(image_path, size):
         class_mode='binary'
     )
     img, lbl = next(test_data_generator)
-
     return img
 
-
-def predict_elbow(image_path):
-    global elbow
-    if elbow:
-        # Wait for model load
-        while elbow_model == None:
-            continue
-        st = time.time()
-        elbow_model.load_weights('models/elbow_86.67_weights.keras')
-        elbow_model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
-        print(f'Time elapsed = {time.time() - st} sec (Elbow)')
-        elbow = False
-    image = load_image(image_path, 512)
-    return elbow_model.predict(image)
-
-
-def predict_finger(image_path):
-    global finger
-    if finger:
-        # Wait for model load
-        while finger_model == None:
-            continue
-        st = time.time()
-        finger_model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
-        print(f'Time elapsed = {time.time() - st} sec (Finger)')
-        finger = False
+def predict(model, image_path):
+    # model not loaded
+    if model == None:
+        return None
+        
+    # weights not loaded
+    if not bone_model.weights:
+        return None
     image = load_image(image_path, 224)
-    return finger_model.predict(image)
-
-
-def predict_forearm(image_path):
-
-    global forearm
-    if forearm:
-        # Wait for model load
-        while forearm_model == None:
-            continue
-        st = time.time()
-        forearm_model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
-        print(f'Time elapsed = {time.time() - st} sec (Forearm)')
-        forearm = False
-    image = load_image(image_path, 224)
-    return forearm_model.predict(image)
-
-
-def predict_hand(image_path):
-    global hand
-    if hand:
-        # Wait for model load
-        while hand_model == None:
-            continue
-        st = time.time()
-        hand_model.load_weights('models/hand_79.96_weights.keras')
-        hand_model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
-        print(f'Time elapsed = {time.time() - st} sec (Hand)')
-        hand = False
-    image = load_image(image_path, 512)
-    return hand_model.predict(image)
-
-
-def predict_humerus(image_path):
-    global humerus
-    if humerus:
-        # Wait for model load
-        while humerus_model == None:
-            continue
-        st = time.time()
-        humerus_model.load_weights('models/humerus_88.89_weights.keras')
-        humerus_model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
-        print(f'Time elapsed = {time.time() - st} sec (Humerus)')
-        humerus = False
-    image = load_image(image_path, 512)
-    return humerus_model.predict(image)
-
-
-def predict_shoulder(image_path):
-    global shoulder
-    if shoulder:
-        # Wait for model load
-        while shoulder_model == None:
-            continue
-        st = time.time()
-        shoulder_model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
-        print(f'Time elapsed = {time.time() - st} sec (Shoulder)')
-        shoulder = False
-    image = load_image(image_path, 224)
-    return shoulder_model.predict(image)
-
-
-def predict_wrist(image_path):
-    global wrist
-    if wrist:
-        # Wait for model load
-        while wrist_model == None:
-            continue
-        st = time.time()
-        wrist_model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
-        print(f'Time elapsed = {time.time() - st} sec (Wrist)')
-        wrist = False
-    image = load_image(image_path, 224)
-    return wrist_model.predict(image)
-
-
-def predict_bone(image_path):
-    image = load_image(image_path, 224)
-    return bone_model.predict(image)
-
+    return model.predict(image)
+  
 def predict_image():
-    if not os.path.exists('temp'):  # Check if image exists
-        QMessageBox.warning(None, "Warning", "No image uploaded!", QMessageBox.Ok)
-        return
-
-    image_path = 'temp'
-    bone_type = np.array(predict_bone(image_path))
+    image_path = ('temp')
+    image = load_image(image_path, 224)
+    bone_type = np.array(predict(bone_model, image_path))
     max_index = np.argmax(bone_type[0])
     print(bone_type)
     print(max_index)
@@ -204,23 +100,21 @@ def predict_image():
 
     match max_index:
         case 0:
-            fracture_prediction = 1 - predict_elbow(image_path)
+            fracture_prediction = 1 - predict(elbow_model, image_path)
         case 1:
-            fracture_prediction = 1 - predict_finger(image_path)
+            fracture_prediction = 1 - predict(finger_model, image_path)
         case 2:
-            fracture_prediction = 1 - predict_forearm(image_path)
+            fracture_prediction = 1 - predict(forearm_model, image_path)
         case 3:
-            fracture_prediction = 1 - predict_hand(image_path)
+            fracture_prediction = 1 - predict(hand_model, image_path)
         case 4:
-            fracture_prediction = 1 - predict_humerus(image_path)
+            fracture_prediction = 1 - predict(humerus_model, image_path)
         case 5:
-            fracture_prediction = 1 - predict_shoulder(image_path)
+            fracture_prediction = 1 - predict(shoulder_model, image_path)
         case 6:
-            fracture_prediction = 1 - predict_wrist(image_path)
+            fracture_prediction = 1 - predict(wrist_model, image_path)
         case 7:
             return None
 
     result = f'{fracture_prediction[0] * 100}% chance of {bone_labels[max_index]} fracture'
     print(result)
-    QMessageBox.information(None, "Fracture Prediction", result, QMessageBox.Ok)
-
