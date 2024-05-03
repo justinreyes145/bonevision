@@ -61,31 +61,11 @@ class HistorySearchPage(QMainWindow):
         for row in query:
             for item in row:
                 if result_column >= 4 and result_column != 9:
-                    print(item)
+                    #print(item)
                     self.resultsTable.setItem(result_row, result_portion, QTableWidgetItem(item))
                     result_portion+=1
-                result_column +=1;
-            result_row+=1
-
-
-'''
-    def search_history(self):
-        name = self.searchLineEdit.text().strip()
-        if name:
-            self.resultsTable.setRowCount(0)
-            matching_entries = collection.find({"name": name})
-            for entry in matching_entries:
-                visit_date = entry.get("date_of_visit", "")
-                birth_date = entry.get("date_of_birth", "")
-                result = entry.get("additional_notes", "")
-                image_path = entry.get("image_path", "")
-
-                row_position = self.resultsTable.rowCount()
-                self.resultsTable.insertRow(row_position)
-                self.resultsTable.setItem(row_position, 0, QTableWidgetItem(visit_date))
-                self.resultsTable.setItem(row_position, 1, QTableWidgetItem(birth_date))
-                self.resultsTable.setItem(row_position, 2, QTableWidgetItem(result))
-                self.resultsTable.setItem(row_position, 3, QTableWidgetItem(image_path))'''
+                result_column +=1
+            #Need to reset a value here
 
 # Example usage:
 if __name__ == "__main__":
