@@ -5,6 +5,7 @@ from PySide6.QtWidgets import QFileDialog
 from datetime import datetime
 import shutil
 import os
+
 from dbconn import insert_one
 from image_enhancement import process_img
 import string
@@ -13,6 +14,18 @@ from classifier import *
 
 class Ui_mainPage(object):
     curr_username = ''
+
+    def go_back_btn(self):
+        from ui_firstPageRevised import ui_firstPageRevised  # avoid circular import
+        ui_first_page = ui_firstPageRevised()
+        ui_first_page.setupUi(self.centralwidget.window())
+        self.centralwidget.window().show()
+
+    def scan_clicked(self):
+        if hasattr(self, 'uploaded_image_path'):
+            predict_image()
+        else:
+            QMessageBox.warning(self.centralwidget, "Warning", "No image uploaded!", QMessageBox.Ok)
 
     def setUserName(self, username):
         self.curr_username = username
@@ -132,11 +145,23 @@ class Ui_mainPage(object):
         self.menuFile.addAction(self.actionOpen)
         self.menuFile.addAction(self.actionClose)
 
+        self.backButton = QPushButton(self.centralwidget)
+        self.backButton.setGeometry(QRect(0, 540, 81, 41))
+        self.backButton.setObjectName("backButton")
+        self.backButton.clicked.connect(self.go_back_btn)
+
+        self.scanButton = QPushButton(self.centralwidget)
+        self.scanButton.setObjectName(u"scanButton")
+        self.scanButton.setGeometry(QRect(400, 510, 121, 27))
+        self.scanButton.clicked.connect(self.scan_clicked)
+
+
         self.retranslateUi(mainPage)
 
         QMetaObject.connectSlotsByName(mainPage)
 
         self.saveButton.clicked.connect(self.save_clicked)  # Connect the save button to its function
+
 
     def upload_clicked(self):
         # Function to handle upload button click
@@ -209,8 +234,12 @@ class Ui_mainPage(object):
         self.menuAbout.setTitle(QCoreApplication.translate("mainPage", u"About", None))
         self.menuHelp.setTitle(QCoreApplication.translate("mainPage", u"Help", None))
 
-        print(self.curr_username)
+        self.backButton.setText(QCoreApplication.translate("MainWindow", u"GoBack", None))
 
+        self.scanButton.setText(QCoreApplication.translate("mainPage", u"Scan Now", None))
+
+
+        print(self.curr_username)
 
     def sanitize_filename(self,name):
         valid_chars = "-_.() %s%s" % (string.ascii_letters, string.digits)

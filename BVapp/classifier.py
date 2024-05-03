@@ -1,4 +1,7 @@
+import os
+
 import tensorflow as tf
+from PySide6.QtWidgets import QMessageBox
 from keras_preprocessing.image import ImageDataGenerator
 from tensorflow import keras
 import numpy as np
@@ -152,7 +155,11 @@ def predict_bone(image_path):
     return bone_model.predict(image)
 
 def predict_image():
-    image_path = ('temp')
+    if not os.path.exists('temp'):  # Check if image exists
+        QMessageBox.warning(None, "Warning", "No image uploaded!", QMessageBox.Ok)
+        return
+
+    image_path = 'temp'
     bone_type = np.array(predict_bone(image_path))
     max_index = np.argmax(bone_type[0])
     print(bone_type)
@@ -179,3 +186,5 @@ def predict_image():
 
     result = f'{fracture_prediction[0] * 100}% chance of {bone_labels[max_index]} fracture'
     print(result)
+    QMessageBox.information(None, "Fracture Prediction", result, QMessageBox.Ok)
+

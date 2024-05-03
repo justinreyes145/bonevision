@@ -4,6 +4,7 @@ from ui_LoginWindow import ui_LoginWindow
 from ui_firstPageRevised import ui_firstPageRevised
 from register_window import RegisterWindow
 
+
 class LoginWindow(QMainWindow):
     def __init__(self):
         super().__init__()

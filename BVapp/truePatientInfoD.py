@@ -35,7 +35,7 @@ class Ui_Dialog(object):
     def retranslateUi(self, Dialog):
         Dialog.setWindowTitle(QCoreApplication.translate("Dialog", u"Dialog", None))
         self.label.setText(QCoreApplication.translate("Dialog", u"Patient Name", None))
-        self.label_2.setText(QCoreApplication.translate("Dialog", u"Patient Date of Birth (MMDDYYYY)", None))
+        self.label_2.setText(QCoreApplication.translate("Dialog", u"Patient Date of Birth (yyyy-mm-dd)", None))
 
     def check_patient_info(self):
         patient_name = self.textEdit.toPlainText()
