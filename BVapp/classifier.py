@@ -8,6 +8,15 @@ from skimage.io import imread
 
 import threading
 
+elbow_model = None
+finger_model = None
+forearm_model = None
+hand_model = None
+humerus_model = None
+shoulder_model = None
+wrist_model = None
+bone_model = None
+
 def load_frac_model(weights_path):
     st = time.time()
     with open('models/model.json', 'r') as model_data:
@@ -42,7 +51,7 @@ def load_forearm_model():
 
 def load_shoulder_model():
     global shoulder_model
-    shoudler_model = load_frac_model('models/shoulder_81.53_weights.keras')
+    shoulder_model = load_frac_model('models/shoulder_81.53_weights.keras')
 
 def load_elbow_model():
     global elbow_model
@@ -107,8 +116,7 @@ def predict_bone(image_path):
 
 def predict_image():
     image_path = ('temp')
-    image = load_image(image_path, 224)
-    bone_type = np.array(predict(bone_model, image_path))
+    bone_type = np.array(predict_bone(image_path))
     max_index = np.argmax(bone_type[0])
     print(bone_type)
     print(max_index)

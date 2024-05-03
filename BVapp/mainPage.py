@@ -9,7 +9,7 @@ import os
 from dbconn import insert_one
 from image_enhancement import process_img
 import string
-from classifier import *
+from classifier import predict_image
 
 
 class Ui_mainPage(object):
@@ -17,9 +17,12 @@ class Ui_mainPage(object):
 
     def go_back_btn(self):
         from ui_firstPageRevised import ui_firstPageRevised  # avoid circular import
-        ui_first_page = ui_firstPageRevised()
-        ui_first_page.setupUi(self.centralwidget.window())
-        self.centralwidget.window().show()
+        self.first_page_window = QMainWindow()
+        self.ui_first_page = ui_firstPageRevised()
+        self.ui_first_page.setUserName(self.curr_username)
+        self.ui_first_page.setupUi(self.first_page_window)
+        self.first_page_window.show()
+        self.centralwidget.window().close()
 
     def scan_clicked(self):
         if hasattr(self, 'uploaded_image_path'):
@@ -181,7 +184,6 @@ class Ui_mainPage(object):
                 self.imagePane.setPixmap(scaled_pixmap)
                 self.centralwidget.update()
 
-                predict_image()
 
     def retranslateUi(self, mainPage):
         mainPage.setWindowTitle(QCoreApplication.translate("mainPage", u"MainWindow", None))
