@@ -2,6 +2,7 @@ from PySide6.QtCore import QRect, QCoreApplication, QMetaObject
 from PySide6.QtGui import QFont, QPixmap, QAction
 from PySide6.QtWidgets import QMainWindow, QWidget, QLabel, QPushButton, QMenuBar, QMenu, QFileDialog, QStatusBar
 from mainPage import Ui_mainPage
+from history import HistorySearchPage
 from truePatientInfoD import Ui_Dialog
 
 
@@ -21,9 +22,11 @@ class ui_firstPageRevised(object):
 
     def openWindow1(self):
         self.window = QMainWindow()
-        self.ui = Ui_Dialog()
-        self.ui.setupUi1(self.window)
+        self.ui = HistorySearchPage()
+        self.ui.setUserName(self.curr_username)
+        self.ui.setup_ui(self.window)
         self.window.show()
+        self.centralwidget.window().close()
 
     def openFileManager(self):
         fileChosen, _ = QFileDialog.getOpenFileName(self.window, "Open Image", "~/", "All Files(*)", "", QFileDialog.ReadOnly)

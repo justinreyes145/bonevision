@@ -6,7 +6,7 @@ from datetime import datetime
 import shutil
 import os
 
-from dbconn import insert_one
+from dbconn import insert_one, update_img_path
 from image_enhancement import process_img
 import string
 from classifier import predict_image
@@ -164,6 +164,18 @@ class Ui_mainPage(object):
 
         self.saveButton.clicked.connect(self.save_clicked)  # Connect the save button to its function
 
+    def load_values(self, l_name, l_v_date, l_b_date, bone, frac, notes):
+        self.nameField.setText(l_name)
+        v_date = l_v_date.split('-')
+        self.dateDay.setText(v_date[2])
+        self.dateMonth.setText(v_date[1])
+        self.dateYear.setText(v_date[0])
+        b_date = l_b_date.split('-')
+        self.bdateDay.setText(b_date[2])
+        self.bdateMonth.setText(b_date[1])
+        self.bdateYear.setText(b_date[0])
+        self.outputPane.setText(f"{frac} chance of {bone} fracture")
+        self.contextPane.setText(notes)
 
     def upload_clicked(self):
         # Function to handle upload button click
@@ -253,21 +265,25 @@ class Ui_mainPage(object):
         return ''.join(c for c in name if c in valid_chars)
 
     def save_clicked(self):
+        if self.outputPane.toPlainText().split().__len__() < 2:
+            return
         name = self.sanitize_filename(self.nameField.toPlainText())
         date_of_visit = f"{self.dateYear.toPlainText()}-{self.dateMonth.toPlainText()}-{self.dateDay.toPlainText()}"
         date_of_birth = f"{self.bdateYear.toPlainText()}-{self.bdateMonth.toPlainText()}-{self.bdateDay.toPlainText()}"
+        scan_result = self.outputPane.toPlainText().split()
+        fracture_type = scan_result[0]
+        fracture_location = scan_result[3]
         additional_notes = self.contextPane.toPlainText()
-        image_path = "IMG0000019.jpg"
 
-        insert_one(self.curr_username, name, date_of_visit, date_of_birth, 'foot',
-                   'yes', image_path, additional_notes)
+        test_num = insert_one(self.curr_username, name, date_of_visit, date_of_birth, fracture_location,
+                              fracture_type, "", additional_notes)
 
         # Create a folder named 'download' if it doesn't exist
         if not os.path.exists('download'):
             os.makedirs('download')
 
         # Construct filenames using user's name and birthdate
-        file_prefix = f"{name}_{date_of_birth}"
+        file_prefix = f"scan{test_num}"
 
         # Sanitize file prefix
         file_prefix = self.sanitize_filename(file_prefix)
@@ -286,6 +302,7 @@ class Ui_mainPage(object):
             image_extension = os.path.splitext(self.uploaded_image_path)[1]
             image_name = f"download/{file_prefix}_image{image_extension}"
             shutil.copy(self.uploaded_image_path, image_name)
+            update_img_path(test_num, image_name)
 
         # Show a message box indicating successful save
         msgBox = QMessageBox()

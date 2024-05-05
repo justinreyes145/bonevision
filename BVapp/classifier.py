@@ -1,4 +1,3 @@
-import self
 import tensorflow as tf
 from keras_preprocessing.image import ImageDataGenerator
 from tensorflow import keras

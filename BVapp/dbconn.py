@@ -9,7 +9,7 @@ def create_table():
         # Creating a cursor object using the cursor() method
         cursor = conn.cursor()
 
-        cursor.execute("DROP TABLE IF EXISTS patients")
+        # cursor.execute("DROP TABLE IF EXISTS patients")
 
         # Creating table
         table = """ CREATE TABLE patients (
@@ -19,7 +19,7 @@ def create_table():
                     Visit_Date DATE,
                     Birth_Date DATE,
                     Bone CHAR(20),
-                    Fracture CHAR(3),
+                    Fracture CHAR(10),
                     Image_Path CHAR(25),
                     Notes MEDIUMTEXT
                 ); """
@@ -44,6 +44,30 @@ def insert_one(username, name, visit_date, birth_date, bone, is_fractured, image
         table = """ INSERT INTO patients
                     VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?); """
         cursor.execute(table, (username, name, visit_date, birth_date, bone, is_fractured, image_path, notes))
+        last_id = cursor.lastrowid
+
+        # Committing changes in the database and closing the connection
+        conn.commit()
+        conn.close()
+
+        return last_id
+    except sqlite3.Error as e:
+        print(e)
+        return -1
+
+
+def update_img_path(test_id, image_path):
+    try:
+        # Connecting to sqlite db
+        conn = sqlite3.connect('patient_info.db')
+
+        # Creating a cursor object using the cursor() method
+        cursor = conn.cursor()
+
+        # Inserting values with parametrized input to prevent SQL injection
+        table = """ UPDATE patients SET Image_Path = ?
+                    WHERE Test_ID = ?; """
+        cursor.execute(table, (image_path, test_id))
 
         # Committing changes in the database and closing the connection
         conn.commit()
@@ -76,24 +100,6 @@ def find_name(name, username):
 
 
 # Run this once to create the db file and table
-'''
-create_table()
-
-insert_one('cat', 'Cheol Reyes', '2024-04-14', '2000-01-01', 'Elbow', 'Yes',
-         'testpath', 'Some notes here')
-insert_one('cat', 'Justin Reyes', '2024-04-14', '2000-01-01', 'Elbow', 'Yes',
-           'testpath', 'Some notes here')
-insert_one('cat', 'Donald Reyes', '2024-04-14', '2000-01-01', 'Elbow', 'Yes',
-           'testpath', 'Some notes here')
-insert_one('dog', 'Evan Reyes', '2024-04-14', '2000-01-01', 'Elbow', 'Yes',
-           'testpath', 'Some notes here')
-insert_one('dog', 'Michael Reyes', '2024-04-14', '2000-01-01', 'Elbow', 'Yes',
-           'testpath', 'Some notes here')
-
-find_name('', 'cat')
-'''
-
 if __name__ == '__main__':
-    entries = find_name('', 'cat')
-    for row in entries:
-        print(row)
+    print(find_name('', 'cat'))
+    # create_table()
