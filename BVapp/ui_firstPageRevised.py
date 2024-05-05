@@ -1,8 +1,7 @@
 from PySide6.QtCore import QRect, QCoreApplication, QMetaObject
 from PySide6.QtGui import QFont, QPixmap, QAction
 from PySide6.QtWidgets import QMainWindow, QWidget, QLabel, QPushButton, QMenuBar, QMenu, QFileDialog, QStatusBar
-from mainPage import Ui_mainPage
-from history import HistorySearchPage
+from mainPage import Ui_mainPage  # Assuming mainPage is another UI file
 from truePatientInfoD import Ui_Dialog
 
 
@@ -11,6 +10,7 @@ class ui_firstPageRevised(object):
 
     def setUserName(self, username):
         self.curr_username = username
+
 
     def openWindow(self):
         self.window = QMainWindow()
@@ -22,11 +22,9 @@ class ui_firstPageRevised(object):
 
     def openWindow1(self):
         self.window = QMainWindow()
-        self.ui = HistorySearchPage()
-        self.ui.setUserName(self.curr_username)
-        self.ui.setup_ui(self.window)
+        self.ui = Ui_Dialog()
+        self.ui.setupUi1(self.window)
         self.window.show()
-        self.centralwidget.window().close()
 
     def openFileManager(self):
         fileChosen, _ = QFileDialog.getOpenFileName(self.window, "Open Image", "~/", "All Files(*)", "", QFileDialog.ReadOnly)
@@ -72,31 +70,6 @@ class ui_firstPageRevised(object):
         self.reloadButton.clicked.connect(self.openWindow)
         self.reloadButton.setGeometry(QRect(320, 490, 150, 30))
         MainWindow.setCentralWidget(self.centralwidget)
-        self.menubar = QMenuBar(MainWindow)
-        self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 800, 24))
-        self.menuFile = QMenu(self.menubar)
-        self.menuFile.setObjectName(u"menuFile")
-        self.menuEdit = QMenu(self.menubar)
-        self.menuEdit.setObjectName(u"menuEdit")
-        self.menuAbout = QMenu(self.menubar)
-        self.menuAbout.setObjectName(u"menuAbout")
-        self.menuHelp = QMenu(self.menubar)
-        self.menuHelp.setObjectName(u"menuHelp")
-        MainWindow.setMenuBar(self.menubar)
-        self.statusbar = QStatusBar(MainWindow)
-        self.statusbar.setObjectName(u"statusbar")
-        MainWindow.setStatusBar(self.statusbar)
-
-        self.menubar.addAction(self.menuFile.menuAction())
-        self.menubar.addAction(self.menuEdit.menuAction())
-        self.menubar.addAction(self.menuAbout.menuAction())
-        self.menubar.addAction(self.menuHelp.menuAction())
-        self.menuFile.addAction(self.actionNew)
-        self.menuFile.addAction(self.actionOpen)
-        self.menuFile.addAction(self.actionClose)
-        self.menuAbout.addAction(self.actionDevs)
-        self.menuHelp.addAction(self.actionReport_Bug)
         self.retranslateUi(MainWindow)
 
         QMetaObject.connectSlotsByName(MainWindow)
