@@ -148,7 +148,7 @@ class Ui_mainPage(object):
         self.menuFile.addAction(self.actionClose)
 
         self.backButton = QPushButton(self.centralwidget)
-        self.backButton.setGeometry(QRect(0, 540, 81, 41))
+        self.backButton.setGeometry(QRect(10, 510, 121, 27))
         self.backButton.setObjectName("backButton")
         self.backButton.clicked.connect(self.go_back_btn)
 
@@ -164,7 +164,7 @@ class Ui_mainPage(object):
 
         self.saveButton.clicked.connect(self.save_clicked)  # Connect the save button to its function
 
-    def load_values(self, l_name, l_v_date, l_b_date, bone, frac, notes):
+    def load_values(self, l_name, l_v_date, l_b_date, bone, frac, notes, img_path):
         self.nameField.setText(l_name)
         v_date = l_v_date.split('-')
         self.dateDay.setText(v_date[2])
@@ -174,8 +174,20 @@ class Ui_mainPage(object):
         self.bdateDay.setText(b_date[2])
         self.bdateMonth.setText(b_date[1])
         self.bdateYear.setText(b_date[0])
-        self.outputPane.setText(f"{frac} chance of {bone} fracture")
+
         self.contextPane.setText(notes)
+        self.uploaded_image_path = img_path
+        pixmap = QPixmap(img_path)
+        scaled_pixmap = pixmap.scaled(self.imagePane.size(), Qt.KeepAspectRatio)
+        self.imagePane.setPixmap(scaled_pixmap)
+
+        result = f"{frac} chance of {bone} fracture"
+        html_result = f'<div style="text-align: center; font-size: 50px;">{result}</div>'
+
+        # update the output pane HTML with the result
+        self.outputPane.setHtml(html_result)
+
+        self.centralwidget.update()
 
     def upload_clicked(self):
         # Function to handle upload button click

@@ -3,6 +3,7 @@ from PySide6.QtGui import *
 from PySide6 import QtWidgets
 from PySide6.QtWidgets import *
 from dbconn import *
+from mainPage import Ui_mainPage
 
 
 class HistorySearchPage(QMainWindow):
@@ -69,10 +70,23 @@ class HistorySearchPage(QMainWindow):
 
         self.searchButton.clicked.connect(self.callDB)
 
+    def openWindow(self, l_name, l_v_date, l_b_date, bone, frac, notes, img_path):
+        self.window = QMainWindow()
+        self.mainUi = Ui_mainPage()
+        self.mainUi.setUserName(self.curr_username)
+        self.mainUi.setupUi(self.window)
+        self.window.show()
+        self.mainUi.load_values(l_name, l_v_date, l_b_date, bone, frac, notes, img_path)
+        self.centralwidget.window().close()
+
     def view_detail_clicked(self):
         selected = self.resultsTable.selectedItems()
+        img_path = f"download/scan{selected[0].text()}_image.png"
         print(selected[1].text(), selected[2].text(), selected[3].text(),
               selected[4].text(), selected[5].text(), selected[6].text())
+
+        self.openWindow(selected[1].text(), selected[2].text(), selected[3].text(),
+                        selected[4].text(), selected[5].text(), selected[6].text(), img_path)
 
     def callDB(self):
         query = find_name(self.searchLineEdit.text(), self.curr_username)
