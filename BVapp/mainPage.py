@@ -59,19 +59,13 @@ class Ui_mainPage(object):
         self.imagePane.setObjectName(u"imagePane")
         self.imagePane.setGeometry(QRect(650, 10, 381, 475))
         self.imagePane.setPixmap(QPixmap("Resources/IMG0000019-1.jpg"))
-        self.printButton = QPushButton(self.centralwidget)
-        self.printButton.setObjectName(u"printButton")
-        self.printButton.setGeometry(QRect(900, 510, 121, 27))
         self.uploadButton = QPushButton(self.centralwidget)
         self.uploadButton.setObjectName(u"uploadButton")
         self.uploadButton.clicked.connect(self.upload_clicked)
-        self.uploadButton.setGeometry(QRect(775, 510, 121, 27))
-        self.showFullImageButton = QPushButton(self.centralwidget)
-        self.showFullImageButton.setObjectName(u"showFullImageButton")
-        self.showFullImageButton.setGeometry(QRect(650, 510, 121, 27))
+        self.uploadButton.setGeometry(QRect(650, 510, 121, 27))
         self.saveButton = QPushButton(self.centralwidget)
         self.saveButton.setObjectName(u"saveButton")
-        self.saveButton.setGeometry(QRect(525, 510, 121, 27))  # Adjusted position
+        self.saveButton.setGeometry(QRect(900, 510, 121, 27))  # Adjusted position
         self.nameField = QTextEdit(self.centralwidget)
         self.nameField.setObjectName(u"nameField")
         self.nameField.setGeometry(QRect(10, 50, 291, 31))
@@ -130,7 +124,7 @@ class Ui_mainPage(object):
 
         self.scanButton = QPushButton(self.centralwidget)
         self.scanButton.setObjectName(u"scanButton")
-        self.scanButton.setGeometry(QRect(400, 510, 121, 27))
+        self.scanButton.setGeometry(QRect(775, 510, 121, 27))
         self.scanButton.clicked.connect(self.scan_clicked)
 
 
@@ -202,9 +196,8 @@ class Ui_mainPage(object):
 
 
         self.imagePane.setText("")
-        self.printButton.setText(QCoreApplication.translate("mainPage", u"Print", None))
         self.uploadButton.setText(QCoreApplication.translate("mainPage", u"Upload", None))
-        self.showFullImageButton.setText(QCoreApplication.translate("mainPage", u"Show Full Image", None))
+
         self.saveButton.setText(QCoreApplication.translate("mainPage", u"Save", None))
         # Set text for save button
         self.nameField.setHtml(QCoreApplication.translate("mainPage", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"

@@ -17,6 +17,7 @@ shoulder_model = None
 wrist_model = None
 bone_model = None
 
+
 def load_frac_model(weights_path):
     st = time.time()
     with open('models/model.json', 'r') as model_data:

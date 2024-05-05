@@ -4,6 +4,7 @@ from PySide6 import QtWidgets
 from PySide6.QtWidgets import *
 from dbconn import *
 from mainPage import Ui_mainPage
+from pathlib import Path
 
 
 class HistorySearchPage(QMainWindow):
@@ -59,12 +60,14 @@ class HistorySearchPage(QMainWindow):
 
         self.viewDetailButton = QPushButton("View Detail")
         self.viewDetailButton.clicked.connect(self.view_detail_clicked)
-        # self.addPatientInfoButton = QPushButton("Add New Patient Info")
+        self.goBackButton = QPushButton("Go Back")
+        self.goBackButton.clicked.connect(self.back_button_clicked)
+        self.buttonLayout.addWidget(self.goBackButton)
         self.buttonLayout.addWidget(self.viewDetailButton)
-        # self.buttonLayout.addWidget(self.addPatientInfoButton)
         button_width = 200
         button_height = 50
         self.viewDetailButton.setFixedSize(button_width, button_height)
+        self.goBackButton.setFixedSize(button_width, button_height)
 
         layout.addLayout(self.buttonLayout)
 
@@ -79,14 +82,30 @@ class HistorySearchPage(QMainWindow):
         self.mainUi.load_values(l_name, l_v_date, l_b_date, bone, frac, notes, img_path)
         self.centralwidget.window().close()
 
+    def back_button_clicked(self):
+        from ui_firstPageRevised import ui_firstPageRevised  # avoid circular import
+        self.first_page_window = QMainWindow()
+        self.ui_first_page = ui_firstPageRevised()
+        self.ui_first_page.setUserName(self.curr_username)
+        self.ui_first_page.setupUi(self.first_page_window)
+        self.first_page_window.show()
+        self.centralwidget.window().close()
+
     def view_detail_clicked(self):
         selected = self.resultsTable.selectedItems()
-        img_path = f"download/scan{selected[0].text()}_image.png"
+        if selected.__len__() == 0:
+            return
+        img_path = f"scan{selected[0].text()}_image"
+        img_names = [img_path]
+        actual_path = ""
+        for fn in Path('download').glob(f'{img_names[0]}.*'):
+            print(f'Found {fn}')
+            actual_path = fn
         print(selected[1].text(), selected[2].text(), selected[3].text(),
               selected[4].text(), selected[5].text(), selected[6].text())
 
         self.openWindow(selected[1].text(), selected[2].text(), selected[3].text(),
-                        selected[4].text(), selected[5].text(), selected[6].text(), img_path)
+                        selected[4].text(), selected[5].text(), selected[6].text(), actual_path)
 
     def callDB(self):
         query = find_name(self.searchLineEdit.text(), self.curr_username)

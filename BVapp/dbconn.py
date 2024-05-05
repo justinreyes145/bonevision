@@ -9,7 +9,7 @@ def create_table():
         # Creating a cursor object using the cursor() method
         cursor = conn.cursor()
 
-        # cursor.execute("DROP TABLE IF EXISTS patients")
+        cursor.execute("DROP TABLE IF EXISTS patients")
 
         # Creating table
         table = """ CREATE TABLE patients (
@@ -101,5 +101,5 @@ def find_name(name, username):
 
 # Run this once to create the db file and table
 if __name__ == '__main__':
-    print(find_name('', 'cat'))
-    # create_table()
+    # print(find_name('', 'cat'))
+    create_table()

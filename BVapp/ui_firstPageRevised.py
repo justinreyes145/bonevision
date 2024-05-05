@@ -1,8 +1,8 @@
 from PySide6.QtCore import QRect, QCoreApplication, QMetaObject
 from PySide6.QtGui import QFont, QPixmap, QAction
-from PySide6.QtWidgets import QMainWindow, QWidget, QLabel, QPushButton, QMenuBar, QMenu, QFileDialog, QStatusBar
+from PySide6.QtWidgets import QMainWindow, QWidget, QLabel, QPushButton
 from mainPage import Ui_mainPage  # Assuming mainPage is another UI file
-from truePatientInfoD import Ui_Dialog
+from history import HistorySearchPage
 
 
 class ui_firstPageRevised(object):
@@ -12,7 +12,7 @@ class ui_firstPageRevised(object):
         self.curr_username = username
 
 
-    def openWindow(self):
+    def openNewCaseWindow(self):
         self.window = QMainWindow()
         self.ui = Ui_mainPage()
         self.ui.setUserName(self.curr_username)
@@ -20,17 +20,21 @@ class ui_firstPageRevised(object):
         self.window.show()
         self.centralwidget.window().close()
 
-    def openWindow1(self):
+    def openExistingCaseWindow(self):
         self.window = QMainWindow()
-        self.ui = Ui_Dialog()
-        self.ui.setupUi1(self.window)
+        self.ui = HistorySearchPage()
+        self.ui.setUserName(self.curr_username)
+        self.ui.setup_ui(self.window)
         self.window.show()
+        self.centralwidget.window().close()
 
-    def openFileManager(self):
-        fileChosen, _ = QFileDialog.getOpenFileName(self.window, "Open Image", "~/", "All Files(*)", "", QFileDialog.ReadOnly)
-
-        if fileChosen:
-            self.label.setText(str(fileChosen))
+    def logOut(self):
+        from ui_LoginWindow import ui_LoginWindow  # avoid circular import
+        self.login_page_window = QMainWindow()
+        self.ui_login_page = ui_LoginWindow()
+        self.ui_login_page.setupUi(self.login_page_window)
+        self.login_page_window.show()
+        self.centralwidget.window().close()
 
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
@@ -61,14 +65,18 @@ class ui_firstPageRevised(object):
         self.iconLabel.setObjectName(u"iconLabel")
         self.iconLabel.setGeometry(QRect(240, 140, 300, 271))
         self.iconLabel.setPixmap(QPixmap("noun-bone-3858505.png"))
-        self.uploadButton = QPushButton(self.centralwidget)
-        self.uploadButton.setObjectName(u"uploadButton")
-        self.uploadButton.clicked.connect(self.openWindow1)
-        self.uploadButton.setGeometry(QRect(320, 440, 150, 30))
-        self.reloadButton = QPushButton(self.centralwidget)
-        self.reloadButton.setObjectName(u"reloadButton")
-        self.reloadButton.clicked.connect(self.openWindow)
-        self.reloadButton.setGeometry(QRect(320, 490, 150, 30))
+        self.existingCaseButton = QPushButton(self.centralwidget)
+        self.existingCaseButton.setObjectName(u"existingCaseButton")
+        self.existingCaseButton.clicked.connect(self.openExistingCaseWindow)
+        self.existingCaseButton.setGeometry(QRect(320, 440, 150, 30))
+        self.newCaseButton = QPushButton(self.centralwidget)
+        self.newCaseButton.setObjectName(u"newCaseButton")
+        self.newCaseButton.clicked.connect(self.openNewCaseWindow)
+        self.newCaseButton.setGeometry(QRect(320, 490, 150, 30))
+        self.backButton = QPushButton(self.centralwidget)
+        self.backButton.setObjectName(u"backButton")
+        self.backButton.clicked.connect(self.logOut)
+        self.backButton.setGeometry(QRect(320, 540, 150, 30))
         MainWindow.setCentralWidget(self.centralwidget)
         self.retranslateUi(MainWindow)
 
@@ -85,12 +93,9 @@ class ui_firstPageRevised(object):
         self.nameLabel.setText(QCoreApplication.translate("MainWindow", u"BoneVision", None))
         self.descLabel.setText(QCoreApplication.translate("MainWindow", u"A Bone Fracture Detection Application", None))
         self.iconLabel.setText("")
-        self.uploadButton.setText(QCoreApplication.translate("MainWindow", u"Existing Case", None))
-        self.reloadButton.setText(QCoreApplication.translate("MainWindow", u"New Case", None))
-        self.menuFile.setTitle(QCoreApplication.translate("MainWindow", u"File", None))
-        self.menuEdit.setTitle(QCoreApplication.translate("MainWindow", u"Edit", None))
-        self.menuAbout.setTitle(QCoreApplication.translate("MainWindow", u"About", None))
-        self.menuHelp.setTitle(QCoreApplication.translate("MainWindow", u"Help", None))
+        self.existingCaseButton.setText(QCoreApplication.translate("MainWindow", u"Existing Case", None))
+        self.newCaseButton.setText(QCoreApplication.translate("MainWindow", u"New Case", None))
+        self.backButton.setText(QCoreApplication.translate("MainWindow", u"Log Out", None))
 
         print(self.curr_username)
     # retranslateUi
