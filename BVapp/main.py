@@ -12,12 +12,6 @@ class LoginWindow(QMainWindow):
         self.ui = ui_LoginWindow()
         self.ui.setupUi(self)
 
-        self.ui.RegisterBtn.clicked.connect(self.open_register_window)
-
-    def open_register_window(self):
-        self.register_window = RegisterWindow()
-        self.register_window.show()
-
 class FirstPage(QMainWindow):
     def __init__(self):
         super().__init__()

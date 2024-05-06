@@ -1,5 +1,6 @@
 from PySide6.QtCore import QObject, Slot, QCoreApplication
 from PySide6.QtWidgets import QMainWindow, QWidget, QLabel, QLineEdit, QPushButton, QMessageBox
+from register_window import RegisterWindow
 import bcrypt
 import os
 
@@ -37,6 +38,7 @@ class ui_LoginWindow(QMainWindow):
         self.RegisterBtn = QPushButton(self.groupBox)
         self.RegisterBtn.setGeometry(170, 330, 113, 32)
         self.RegisterBtn.setText("Register")
+        self.RegisterBtn.clicked.connect(self.open_register_window)
 
         self.LoginBtn = QPushButton(self.groupBox)
         self.LoginBtn.setGeometry(320, 330, 113, 32)
@@ -50,6 +52,10 @@ class ui_LoginWindow(QMainWindow):
         LoginWindow.setWindowTitle(QCoreApplication.translate("LoginWindow", "Login"))
         self.RegisterBtn.setText(QCoreApplication.translate("LoginWindow", "Register"))
         self.LoginBtn.setText(QCoreApplication.translate("LoginWindow", "Login"))
+
+    def open_register_window(self):
+        self.register_window = RegisterWindow()
+        self.register_window.show()
 
     @Slot()
     def handleLogin(self):
