@@ -147,6 +147,7 @@ class Ui_mainPage(object):
 
         self.contextPane.setText(notes)
         self.uploaded_image_path = img_path
+        process_img(f"{img_path}")
         pixmap = QPixmap(img_path)
         scaled_pixmap = pixmap.scaled(self.imagePane.size(), Qt.KeepAspectRatio)
         self.imagePane.setPixmap(scaled_pixmap)
